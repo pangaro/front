@@ -5,6 +5,7 @@ import {
     Route,
     Redirect
   } from "react-router-dom";
+import { LoginScreen } from '../components/auth/LoginScreen';
 import { AuthRouter } from './AuthRouter';
 import { DasboardRouter } from './DasboardRouter';
 
@@ -14,11 +15,11 @@ export const AppRouter = () => {
     <Router>
       <div>
         <Switch>
-          <Route path="/auth/" component={ AuthRouter }/>
+          <Route exact path="/login" component={ LoginScreen } />
 
           <Route path="/" component={ DasboardRouter }/>
 
-          <Redirect to="/auth"/>
+          <Redirect to="/login"/>
         </Switch>
       </div>
     </Router>

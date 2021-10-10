@@ -1,57 +1,52 @@
 import React from "react";
 
 export const LoginScreen = () => {
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log('submit')
+	}
   return (
-    <div
-      className="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 1-column login-bg blank-page blank-page"
-      data-open="click"
-      data-menu="vertical-dark-menu"
-      data-col="1-column"
-    >
-      <div className="row">
-        <div className="col s12">
-          <div className="container">
-            <div id="login-page" className="row">
-              <div className="col s12 m6 l4 z-depth-4 card-panel border-radius-6 login-card bg-opacity-8">
-                <form className="login-form">
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <h5 className="ml-4">Sign in</h5>
-                    </div>
-                  </div>
-                  <div className="row margin">
-                    <div className="input-field col s12">
-                      <i className="material-icons prefix pt-2">person_outline</i>
-                      <input id="username" type="text" />
-                      <label htmlFor="username" className="center-align">
-                        Username
-                      </label>
-                    </div>
-                  </div>
-                  <div className="row margin">
-                    <div className="input-field col s12">
-                      <i className="material-icons prefix pt-2">lock_outline</i>
-                      <input id="password" type="password" />
-                      <label htmlFor="password">Password</label>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <a
-                        href="index.html"
-                        className="btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12"
-                      >
-                        Login
-                      </a>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="content-overlay"></div>
-        </div>
-      </div>
-    </div>
+
+    <main className="d-flex w-100 h-100">
+		<div className="container d-flex flex-column">
+			<div className="row vh-100">
+				<div className="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+					<div className="d-table-cell align-middle">
+
+						<div className="text-center mt-4">
+							<h1 className="h2">Welcome back, Charles</h1>
+							<p className="lead">
+								Sign in to your account to continue
+							</p>
+						</div>
+
+						<div className="card">
+							<div className="card-body">
+								<div className="m-sm-4">
+									<div className="text-center">
+										<img src="img/avatars/avatar.jpg" alt="Charles Hall" className="img-fluid rounded-circle" width="132" height="132" />
+									</div>
+									<form>
+										<div className="mb-3">
+											<label className="form-label">Email</label>
+											<input className="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+										</div>
+										<div className="mb-3">
+											<label className="form-label">Password</label>
+											<input className="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+										</div>
+										<div className="text-center mt-3">
+											<button type="submit" className="btn btn-lg btn-primary">Sign in</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
   );
 };
