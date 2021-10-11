@@ -1,27 +1,52 @@
-import React from 'react';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect
-  } from "react-router-dom";
-import { LoginScreen } from '../components/auth/LoginScreen';
-import { AuthRouter } from './AuthRouter';
-import { DasboardRouter } from './DasboardRouter';
+  BrowserRouter as Router,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+import { startChecking } from "../actions/auth";
+import { LoginScreen } from "../components/auth/LoginScreen";
+import { DasboardRouter } from "./DasboardRouter";
+import { PrivateRoute } from "./PrivateRoute";
+import { PublicRoute } from "./PublicRoute";
 
 export const AppRouter = () => {
 
-    return (
+  const dispatch = useDispatch();
+
+  const { checking, username } = useSelector((state) => state.auth);
+
+ console.log(checking, username)
+
+  useEffect(() => {
+    dispatch(startChecking());
+  }, [dispatch]);
+
+  if (checking) {
+    return <h3>espere....</h3>;
+  }
+
+  return (
     <Router>
       <div>
         <Switch>
-          <Route exact path="/login" component={ LoginScreen } />
+          <PublicRoute
+            exact
+            path="/login"
+            component={LoginScreen}
+            isAuthenticated={!!username}
+          />
 
-          <Route path="/" component={ DasboardRouter }/>
+          <PrivateRoute
+            path="/"
+            component={DasboardRouter}
+            isAuthenticated={!!username}
+          />
 
-          <Redirect to="/login"/>
+          <Redirect to="/login" />
         </Switch>
       </div>
     </Router>
-    );
-}
+  );
+};

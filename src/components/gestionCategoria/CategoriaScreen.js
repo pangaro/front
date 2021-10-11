@@ -1,98 +1,76 @@
-import React from 'react';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { categoriaAdd } from "../../actions/categoria.js";
+import { categorias } from "../../db.js";
+import { useForm } from "../../hooks/useForm.js";
+import { CategoriaItem } from "./CategoriaItem.js";
+
+
 
 export const CategoriaScreen = () => {
+
+  const dispatch = useDispatch()
+
+  const [formValues, handleInputChange] = useForm({
+    categoria: "",
+    descripcion: "",
+  });
+
+  const { categoria, descripcion } = formValues;
+
+  const handleAgregar = (e) => {
+    e.preventDefault();
+
+    dispatch(categoriaAdd(categoria, descripcion));
+  };
   return (
-    <table className="table table-striped table-hover table-bordered">
-      <thead>
-        <tr className="text-center">
-          <th>Name</th>
-          <th>Phone Number</th>
-          <th>Date of Birth</th>
-          <th>Aciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>765-382-8195</td>
-          <td>704-993-5435</td>
-          <td>September 14, 1965</td>
-          <td className="table-action text-center">
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-edit-2 align-middle"
+    <form onSubmit={handleAgregar}>
+      <table className="table table-striped table-hover table-bordered">
+        <thead>
+          <tr className="text-center">
+            <th>Categoria</th>
+            <th>Descripción</th>
+            <th>Aciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input
+                className="form-control form-control-sm"
+                type="text"
+                name="categoria"
+                value={categoria}
+                autoComplete="off"
+                onChange={handleInputChange}
+              />
+            </td>
+            <td>
+              <input
+                className="form-control form-control-sm"
+                type="text"
+                name="descripcion"
+                value={descripcion}
+                autoComplete="off"
+                onChange={handleInputChange}
+              />
+            </td>
+            <td>
+              <span
+                className="btn btn-sm btn-success float-none"
+                type="submit"
+                onClick={handleAgregar}
               >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-              </svg>
-            </a>
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-trash align-middle"
-              >
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>765-382-8195</td>
-          <td>765-382-8195</td>
-          <td>April 2, 1971</td>
-          <td className="table-action text-center">
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-edit-2 align-middle"
-              >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-              </svg>
-            </a>
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-trash align-middle"
-              >
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                Agregar
+              </span>
+            </td>
+          </tr>
+
+          {categorias.recordset.map((categoria) => (
+            <CategoriaItem key={categoria.Categoria} categoria={categoria} />
+          ))}
+        </tbody>
+      </table>
+    </form>
   );
 };
