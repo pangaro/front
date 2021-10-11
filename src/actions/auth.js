@@ -1,49 +1,64 @@
+import Swal from 'sweetalert2';
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import { types } from "../types/types";
 
-export const startLogin = (username, password) => {
-  return async (dispatch) => {
-    const respuesta = await fetchSinToken("login", {}, "GET");
-    const data = await respuesta.json();
+export const startLogin = ( username, password ) => {
+  return async( dispatch ) => {
+      const resp = await fetchSinToken( 'auth/login', { username, password }, 'POST' );
+      const body = await resp.json();
+    console.log(body)
+      if( body.ok ) {
+          localStorage.setItem('token', body.token );
+          localStorage.setItem('token-init-date', new Date().getTime() );
 
-    if (data.ok) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("token-init-date", new Date().getTime());
+          dispatch( login({
+            username: body.username
+          }) )
+      } else {
+          Swal.fire('Error', body.msg, 'error');
+      }
+      
 
-      dispatch(
-        login({
-          username: data.username,
-        })
-      );
-    }
-  };
-};
+  }
+}
 
 export const startChecking = () => {
-  return async (dispatch) => {
-    const respuesta = await fetchConToken("renew");
-    const data = await respuesta.json();
+  return async(dispatch) => {
 
-    if (data.ok) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("token-init-date", new Date().getTime());
+      const resp = await fetchConToken( 'auth/renew' );
+      const body = await resp.json();
 
-      dispatch(
-        login({
-          username: data.username,
-        })
-      );
-    } else {
-      dispatch(checkingFinish());
+      if( body.ok ) {
+          localStorage.setItem('token', body.token );
+          localStorage.setItem('token-init-date', new Date().getTime() );
+
+          dispatch( login({
+
+            username: body.username
+          }) )
+      } else {
+          dispatch( checkingFinish() );
+      }
+  }
+}
+
+const checkingFinish = () => ({ type: types.auth_checking_finish });
+
+
+
+const login = ( username ) => ({
+    type: types.auth_login,
+    payload: username
+});
+
+
+export const startLogout = () => {
+    return ( dispatch ) => {
+
+        localStorage.clear();
+        //dispatch( eventLogout() );
+        dispatch( logout() );
     }
-  };
-};
+}
 
-const checkingFinish = () => ({
-  type: types.auth_checking_finish,
-});
-
-const login = (username) => ({
-  type: types.auth_login,
-  payload: username,
-});
+const logout = () => ({ type: types.auth_logout })

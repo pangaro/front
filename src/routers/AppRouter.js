@@ -17,7 +17,6 @@ export const AppRouter = () => {
 
   const { checking, username } = useSelector((state) => state.auth);
 
- console.log(checking, username)
 
   useEffect(() => {
     dispatch(startChecking());
@@ -44,7 +43,7 @@ export const AppRouter = () => {
             isAuthenticated={!!username}
           />
 
-          <Redirect to="/login" />
+          <Redirect to="/" />
         </Switch>
       </div>
     </Router>

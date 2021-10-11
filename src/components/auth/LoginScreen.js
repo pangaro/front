@@ -11,7 +11,7 @@ export const LoginScreen = () => {
 
   const [formValues, handleInputChange] = useForm({
     username: "hpare",
-    password: "123456",
+    password: "@pangaro",
   });
 
   const { username, password } = formValues;
@@ -62,7 +62,7 @@ export const LoginScreen = () => {
                         <label className="form-label">Contraseña</label>
                         <input
                           className="form-control form-control-lg"
-                          type="password"
+                          type="text"
                           name="password"
                           placeholder="Enter your password"
                           value={password}

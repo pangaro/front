@@ -6,9 +6,9 @@ export const AuthRouter = () => {
   return (
     <>
       <Switch>
-        <Route exact path="/auth/login" component={ LoginScreen } />
+        <Route exact path="/login" component={ LoginScreen } />
 
-        <Redirect to="/auth/login" />
+        <Redirect to="/login" />
       </Switch>
     </>
   );

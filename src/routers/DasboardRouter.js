@@ -5,6 +5,7 @@ import { CategoriaScreen } from "../components/gestionCategoria/CategoriaScreen"
 import { Header } from "../components/ui/Header";
 import { Sidebar } from "../components/ui/Sidebar";
 import { Footer } from "../components/ui/Footer";
+import { MainScreen } from "../components/ui/Main";
 
 export const DasboardRouter = () => {
   return (
@@ -29,6 +30,8 @@ export const DasboardRouter = () => {
                   </div>
 
                   <Switch>
+                    <Route exact path="/" component={MainScreen} />
+                    
                     <Route exact path="/category" component={CategoriaScreen} />
 
                     <Route exact path="/amount" component={AmountScreen} />
