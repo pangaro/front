@@ -45,7 +45,7 @@ export const LoginScreen = () => {
                         height="132"
                       />
                     </div>
-                    <form onSubmit={handleLogin}>
+                    <form>
                       <div className="mb-3">
                         <label className="form-label">Usuario</label>
                         <input
@@ -70,13 +70,13 @@ export const LoginScreen = () => {
                         />
                       </div>
                       <div className="text-center mt-3">
-                        <button
-                          type="submit"
+                        <span
+                          onClick={handleLogin}
                           className="btn btn-lg btn-primary"
                           disabled={ loading }
                         >
                           Login
-                        </button>
+                        </span>
                       </div>
                     </form>
                   </div>

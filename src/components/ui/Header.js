@@ -1,11 +1,13 @@
 import React from "react";
+import { useDispatch } from 'react-redux';
+import { startLogout } from "../../actions/auth";
 
 export const Header = () => {
 
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    
-    console.log("salir");
-    // dispatch( startlogout() );
+    dispatch( startLogout() );
   };
 
   const handleMenu = () => {

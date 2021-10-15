@@ -19,7 +19,7 @@ export const DasboardRouter = () => {
           <div className="container-fluid p-0">
             <h1 className="h3 mb-3">Tables</h1>
             <div className="row">
-              <div className="col-12 col-xl-6">
+              <div className="col-12">
                 <div className="card">
                   <div className="card-header">
                     <h5 className="card-title">Hoverable Rows</h5>

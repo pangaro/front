@@ -1,39 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from 'react-redux';
+import { categoriaClearActive, categoriaSetActive, CategoriaStartDelete, categoriaStartUpdate } from "../../actions/categoria";
+import { categoriaStartLoading } from './../../actions/categoria';
 
 export const CategoriaItem = ({ categoria }) => {
+
+
+
+  const dispatch = useDispatch()
+
   const { Categoria, Descripcion } = categoria;
 
-  const handleEdit = () => {
-    console.log("editar");
+  const handleEdit = (c) => {
+    const tdDescripcion = document.getElementById(`desc_${c.Categoria}`);
+    const btnEdit = document.getElementById(`btnEdit_${c.Categoria}`);
+    const btnConfirm = document.getElementById(`btnConfirm_${c.Categoria}`);
+    const descripcionData = tdDescripcion.innerHTML;
+    
+   btnEdit.classList.add('d-none')
+   btnConfirm.classList.remove('d-none')
+
+  tdDescripcion.innerHTML=`
+    <input type="text" class="form-control" id="descripcion_text_${c.Categoria}" value="${descripcionData}">
+  `;
+
+  dispatch( categoriaSetActive( c ) );
+
+};
+
+  const handleDelete = (c) => {
+
+    dispatch( categoriaSetActive( c ) );
+
+    dispatch( CategoriaStartDelete())
   };
 
-  const handleDelete = () => {
-    console.log("eliminar");
+  const handleConfirm = (c) => {
+
+    const valDescripcion = document.getElementById(
+      `descripcion_text_${c.Categoria}`
+      ).value;
+      const btnEdit = document.getElementById(`btnEdit_${c.Categoria}`);
+      const btnConfirm = document.getElementById(`btnConfirm_${c.Categoria}`);
+      
+      document.getElementById(`desc_${c.Categoria}`).innerHTML = valDescripcion;
+
+      btnEdit.classList.remove("d-none");
+      btnConfirm.classList.add("d-none");
+
+      dispatch(categoriaStartUpdate({
+        Descripcion:valDescripcion
+      }))
+
+      dispatch(categoriaClearActive())
   };
+  
 
   return (
+
     <tr>
-      <td>
-        <span>{Categoria}</span>
-        <input
-          className="form-control form-control-sm"
-          type="text"
-          defaultValue={Categoria}
-        />
+      <td id={`cat_${Categoria}`}>
+        {Categoria}
       </td>
-      <td>
-        <span>{Descripcion}</span>
-        <input
-          className="form-control form-control-sm"
-          type="text"
-          defaultValue={Descripcion}
-        />
+      <td id={`desc_${Categoria}`}>
+        {Descripcion}
       </td>
       <td className="table-action">
         <div className="btn-group btn-group-sm mb-1" style={{ float: "none" }}>
           <span
+            id={`btnEdit_${Categoria}`}
             className="btn btn-sm btn-secondary me-1"
-            onClick={handleEdit}
+            onClick={ () => handleEdit(categoria)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="editar"
@@ -54,8 +91,8 @@ export const CategoriaItem = ({ categoria }) => {
             </svg>
           </span>
           <span
-            className="btn btn-sm btn-warning"
-            onClick={handleDelete}
+            className="btn btn-sm btn-danger me-1"
+            onClick={() => handleDelete(categoria)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="eliminar"
@@ -77,7 +114,11 @@ export const CategoriaItem = ({ categoria }) => {
             </svg>
           </span>
         </div>
-        <span className="btn btn-sm btn-danger float-none">Confirmar</span>
+        <span 
+        id={`btnConfirm_${Categoria}`}
+        className="btn btn-sm btn-success float-none d-none"
+        onClick={ () => handleConfirm(categoria)}
+        >Confirmar</span>
       </td>
     </tr>
   );

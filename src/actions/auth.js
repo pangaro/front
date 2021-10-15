@@ -6,7 +6,7 @@ export const startLogin = ( username, password ) => {
   return async( dispatch ) => {
       const resp = await fetchSinToken( 'auth/login', { username, password }, 'POST' );
       const body = await resp.json();
-    console.log(body)
+
       if( body.ok ) {
           localStorage.setItem('token', body.token );
           localStorage.setItem('token-init-date', new Date().getTime() );
@@ -56,7 +56,7 @@ export const startLogout = () => {
     return ( dispatch ) => {
 
         localStorage.clear();
-        //dispatch( eventLogout() );
+
         dispatch( logout() );
     }
 }

@@ -1,28 +1,39 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { categoriaAdd } from "../../actions/categoria.js";
-import { categorias } from "../../db.js";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// import { categoriaAdd } from "../../actions/categoria.js";
 import { useForm } from "../../hooks/useForm.js";
 import { CategoriaItem } from "./CategoriaItem.js";
-
+import { categoriaStartAddNew, categoriaStartLoading } from './../../actions/categoria';
 
 
 export const CategoriaScreen = () => {
 
+  const { cats } = useSelector( state => state.cat );
+
   const dispatch = useDispatch()
 
   const [formValues, handleInputChange] = useForm({
-    categoria: "",
-    descripcion: "",
+    Categoria: "",
+    Descripcion: "",
   });
 
   const { categoria, descripcion } = formValues;
 
+  useEffect(() => {
+        
+    dispatch( categoriaStartLoading() );
+
+}, [ dispatch ])
+
+
   const handleAgregar = (e) => {
     e.preventDefault();
 
-    dispatch(categoriaAdd(categoria, descripcion));
+    dispatch( categoriaStartAddNew(formValues) );
+
   };
+
+  
   return (
     <form onSubmit={handleAgregar}>
       <table className="table table-striped table-hover table-bordered">
@@ -37,9 +48,9 @@ export const CategoriaScreen = () => {
           <tr>
             <td>
               <input
-                className="form-control form-control-sm"
+                className="form-control"
                 type="text"
-                name="categoria"
+                name="Categoria"
                 value={categoria}
                 autoComplete="off"
                 onChange={handleInputChange}
@@ -47,9 +58,9 @@ export const CategoriaScreen = () => {
             </td>
             <td>
               <input
-                className="form-control form-control-sm"
+                className="form-control"
                 type="text"
-                name="descripcion"
+                name="Descripcion"
                 value={descripcion}
                 autoComplete="off"
                 onChange={handleInputChange}
@@ -57,17 +68,17 @@ export const CategoriaScreen = () => {
             </td>
             <td>
               <span
-                className="btn btn-sm btn-success float-none"
+                className="btn btn-sm btn-secondary float-none"
                 type="submit"
-                onClick={handleAgregar}
+                onClick={ handleAgregar}
               >
                 Agregar
               </span>
             </td>
           </tr>
 
-          {categorias.recordset.map((categoria) => (
-            <CategoriaItem key={categoria.Categoria} categoria={categoria} />
+          {cats.map((categoria,index) => (
+            <CategoriaItem key={index} categoria={categoria} />
           ))}
         </tbody>
       </table>
