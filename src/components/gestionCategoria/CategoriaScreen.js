@@ -1,39 +1,50 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { categoriaAdd } from "../../actions/categoria.js";
 import { useForm } from "../../hooks/useForm.js";
 import { CategoriaItem } from "./CategoriaItem.js";
-import { categoriaStartAddNew, categoriaStartLoading } from './../../actions/categoria';
-
+import {
+  categoriaClearActive,
+  categoriaStartAddNew,
+  categoriaStartLoading,
+  categoriaStartUpdate,
+} from "./../../actions/categoria";
 
 export const CategoriaScreen = () => {
+  const { cats } = useSelector((state) => state.cat);
 
-  const { cats } = useSelector( state => state.cat );
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
-
-  const [formValues, handleInputChange] = useForm({
+  const [formValues, handleInputChange, reset] = useForm({
     Categoria: "",
     Descripcion: "",
   });
 
-  const { categoria, descripcion } = formValues;
+  const { Categoria, Descripcion } = formValues;
 
   useEffect(() => {
-        
-    dispatch( categoriaStartLoading() );
-
-}, [ dispatch ])
-
+    dispatch(categoriaStartLoading());
+  }, [dispatch]);
 
   const handleAgregar = (e) => {
     e.preventDefault();
 
-    dispatch( categoriaStartAddNew(formValues) );
-
+    dispatch(categoriaStartAddNew(formValues));
+    reset();
   };
 
-  
+  const handleModificar = (values) => {
+    dispatch(categoriaStartUpdate(values));
+
+    dispatch(categoriaClearActive());
+  };
+
+  const stateButton = (value) => {
+    const btnAgregar = document.querySelector('#btnAgregar');
+    (value === true)
+      ? btnAgregar.classList.add("disabled")
+      : btnAgregar.classList.remove("disabled")
+  }
+
   return (
     <form onSubmit={handleAgregar}>
       <table className="table table-striped table-hover table-bordered">
@@ -51,7 +62,7 @@ export const CategoriaScreen = () => {
                 className="form-control"
                 type="text"
                 name="Categoria"
-                value={categoria}
+                value={Categoria}
                 autoComplete="off"
                 onChange={handleInputChange}
               />
@@ -61,24 +72,29 @@ export const CategoriaScreen = () => {
                 className="form-control"
                 type="text"
                 name="Descripcion"
-                value={descripcion}
+                value={Descripcion}
                 autoComplete="off"
                 onChange={handleInputChange}
               />
             </td>
             <td>
-              <span
+              <span id="btnAgregar"
                 className="btn btn-sm btn-secondary float-none"
                 type="submit"
-                onClick={ handleAgregar}
+                onClick={handleAgregar}
               >
                 Agregar
               </span>
             </td>
           </tr>
 
-          {cats.map((categoria,index) => (
-            <CategoriaItem key={index} categoria={categoria} />
+          {cats.map((categoria, index) => (
+            <CategoriaItem
+              key={index}
+              categoria={categoria}
+              action={handleModificar}
+              stateButton={stateButton}
+            />
           ))}
         </tbody>
       </table>
