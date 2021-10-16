@@ -56,7 +56,7 @@ export const categoriaSetActive = (categoria) => ({
     payload: categoria
 });
 
-export const CategoriaStartDelete = () => {
+export const categoriaStartDelete = () => {
     return async ( dispatch, getState ) => {
 
         const { Categoria } = getState().cat.catActive;

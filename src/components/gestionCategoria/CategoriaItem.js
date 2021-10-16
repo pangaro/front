@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
   categoriaSetActive,
-  CategoriaStartDelete,
+  categoriaStartDelete,
   categoriaStartLoading,
 } from "../../actions/categoria";
 
@@ -90,7 +90,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
       if (result.isConfirmed) {
         dispatch(categoriaSetActive(c));
 
-        dispatch(CategoriaStartDelete());
+        dispatch(categoriaStartDelete());
       }
     });
   };
