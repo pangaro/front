@@ -2,50 +2,46 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm.js";
 import { AmountItem } from "./AmountItem.js";
-import {
-  categoriaClearActive,
-  categoriaStartAddNew,
-  categoriaStartLoading,
-  categoriaStartUpdate,
-} from "./../../actions/categoria";
+import { montoStartLoading } from "../../actions/monto.js";
 
 export const AmountScreen = () => {
-  const { cats } = useSelector((state) => state.cat);
+  const { monts } = useSelector((state) => state.mont);
 
   const dispatch = useDispatch();
 
   const [formValues, handleInputChange, reset] = useForm({
+    CategoriaMontosID: "",
     Categoria: "",
-    Descripcion: "",
+    Anio: new Date().getFullYear(),
   });
 
-  const { Categoria, Descripcion } = formValues;
+  const { CategoriaMontosID, Categoria, Anio, ModalidadHorariaID, DiasServicioID, GuardiaTipoID, Monto } = formValues;
 
   useEffect(() => {
-    dispatch(categoriaStartLoading());
+    dispatch(montoStartLoading({Anio}));
   }, [dispatch]);
 
   const handleAgregar = (e) => {
     e.preventDefault();
-    if (Categoria ==='' || Descripcion === '') {
-      return }
+    // if (Categoria ==='' || Descripcion === '') {
+    //   return }
       
-    dispatch(categoriaStartAddNew(formValues));
-    reset();
+  //   dispatch(categoriaStartAddNew(formValues));
+  //   reset();
   };
 
-  const handleModificar = (values) => {
-    dispatch(categoriaStartUpdate(values));
+  // const handleModificar = (values) => {
+  //   dispatch(categoriaStartUpdate(values));
 
-    dispatch(categoriaClearActive());
-  };
+  //   dispatch(categoriaClearActive());
+  // };
 
-  const stateButton = (value) => {
-    const btnAgregar = document.querySelector("#btnAgregar");
-    value === true
-      ? btnAgregar.classList.add("disabled")
-      : btnAgregar.classList.remove("disabled");
-  };
+  // const stateButton = (value) => {
+  //   const btnAgregar = document.querySelector("#btnAgregar");
+  //   value === true
+  //     ? btnAgregar.classList.add("disabled")
+  //     : btnAgregar.classList.remove("disabled");
+  // };
 
   return (
     <>
@@ -58,7 +54,10 @@ export const AmountScreen = () => {
                 <thead>
                   <tr className="text-center">
                     <th>Categoria</th>
-                    <th>Descripción</th>
+                    <th>Modalidad</th>
+                    <th>Dias</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
                     <th>Aciones</th>
                   </tr>
                 </thead>
@@ -78,8 +77,42 @@ export const AmountScreen = () => {
                       <input
                         className="form-control"
                         type="text"
-                        name="Descripcion"
-                        value={Descripcion}
+                        name="ModalidadHorariaID"
+                        value={ModalidadHorariaID}
+                        autoComplete="off"
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        className="form-control"
+                        type="text"
+                        name="DiasServicioID"
+                        value={DiasServicioID}
+                        autoComplete="off"
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <select
+                        className="form-select"
+                        name="GuardiaTipoID"
+                        value={GuardiaTipoID}
+                        autoComplete="off"
+                        onChange={handleInputChange}
+                      >
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        className="form-control"
+                        type="text"
+                        name="Monto"
+                        value={Monto}
                         autoComplete="off"
                         onChange={handleInputChange}
                       />
@@ -93,15 +126,15 @@ export const AmountScreen = () => {
                       >
                         Agregar
                       </span>
-                    </td>
+                    </td> 
                   </tr>
 
-                  {cats.map((categoria, index) => (
+                  {monts.map((monto, index) => (
                     <AmountItem
                       key={index}
-                      categoria={categoria}
-                      action={handleModificar}
-                      stateButton={stateButton}
+                      monto={monto}
+                      // action={handleModificar}
+                      // stateButton={stateButton}
                     />
                   ))}
                 </tbody>

@@ -2,22 +2,18 @@ import Swal from 'sweetalert2';
 import { fetchConToken } from '../helpers/fetch';
 import { types } from "../types/types";
 
-export const categoriaStartLoading = () => {
+export const montoStartLoading = ({Anio}) => {
     return async(dispatch) => {
-        
         try {
-
-            const resp = await fetchConToken( 'category' );
+            const resp = await fetchConToken( 'categoryAmount', {Anio}, 'POST' );
             const body = await resp.json();
-            // const events = dateEvents( body.event );
-            // console.log(body.recordset)
-            dispatch( categoriaLoaded( body.recordset ) );
+
+            dispatch( montoLoaded( body.recordset ) );
 
         } catch (error) {
             console.log(error)
             Swal.fire('Error', 'No de ha podido completar la operación', 'error');
         }
-
     }
 }
 
@@ -81,15 +77,15 @@ export const categoriaStartDelete = () => {
     }
 }
 
-export const categoriaStartUpdate = ( categoria ) => {
+export const montoStartUpdate = ( monto ) => {
     return async(dispatch, getState) => {
-        const { Categoria } = getState().cat.catActive;
+        const { monto } = getState().mont.montActive;
         try {
-            const resp = await fetchConToken(`category/${ Categoria }`, categoria, 'PUT' );
+            const resp = await fetchConToken(`category/${ monto }`, monto, 'PUT' );
             const body = await resp.json();
             
             if ( body.ok ) {
-                dispatch(categoriaUpdated(categoria));
+                dispatch(montoUpdated(monto));
                 Swal.fire('Atención', body.msg, 'success');
             } else {
                 Swal.fire('Error', body.msg, 'error');
@@ -103,17 +99,17 @@ export const categoriaStartUpdate = ( categoria ) => {
     }
 }
 
-export const categoriaClearActive = () => ({ type: types.categoria_clear_active });
+export const montoClearActive = () => ({ type: types.monto_clear_active });
 
-const categoriaUpdated = ( categoria ) => ({
-    type: types.categoria_updated,
-    payload: categoria
+const montoUpdated = ( monto ) => ({
+    type: types.monto_updated,
+    payload: monto
 });
 
 const categoriaDeleted = () => ({ type: types.categoria_deleted });
 
-const categoriaLoaded = (categorias) => ({
-    type: types.categoria_loaded,
-    payload: categorias
+const montoLoaded = (montos) => ({
+    type: types.monto_loaded,
+    payload: montos
 })
 

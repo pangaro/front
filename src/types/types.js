@@ -21,11 +21,11 @@ export const types = {
     categoria_deleted: '[CAT] deleted',
     categoria_updated: '[CAT] updated',
 
-    montos_loaded:'[MONT] loaded',
-    montos_start_add_new: '[MONT] add_new',
-    montos_add_new: '[MONT] add_new',
-    montos_set_active: '[MONT] set_active',
-    montos_clear_active: '[MONT] clear_active',
-    montos_deleted: '[MONT] deleted',
-    montos_updated: '[MONT] updated',
+    monto_loaded:'[MONT] loaded',
+    monto_start_add_new: '[MONT] add_new',
+    monto_add_new: '[MONT] add_new',
+    monto_set_active: '[MONT] set_active',
+    monto_clear_active: '[MONT] clear_active',
+    monto_deleted: '[MONT] deleted',
+    monto_updated: '[MONT] updated',
 }
