@@ -1,80 +1,115 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "../../hooks/useForm.js";
+import { AmountItem } from "./AmountItem.js";
+import {
+  categoriaClearActive,
+  categoriaStartAddNew,
+  categoriaStartLoading,
+  categoriaStartUpdate,
+} from "./../../actions/categoria";
 
 export const AmountScreen = () => {
-  const handleEdit = () => {
-    console.log("editar");
+  const { cats } = useSelector((state) => state.cat);
+
+  const dispatch = useDispatch();
+
+  const [formValues, handleInputChange, reset] = useForm({
+    Categoria: "",
+    Descripcion: "",
+  });
+
+  const { Categoria, Descripcion } = formValues;
+
+  useEffect(() => {
+    dispatch(categoriaStartLoading());
+  }, [dispatch]);
+
+  const handleAgregar = (e) => {
+    e.preventDefault();
+    if (Categoria ==='' || Descripcion === '') {
+      return }
+      
+    dispatch(categoriaStartAddNew(formValues));
+    reset();
   };
 
-  const handleDelete = () => {
-    console.log("eliminar");
+  const handleModificar = (values) => {
+    dispatch(categoriaStartUpdate(values));
+
+    dispatch(categoriaClearActive());
+  };
+
+  const stateButton = (value) => {
+    const btnAgregar = document.querySelector("#btnAgregar");
+    value === true
+      ? btnAgregar.classList.add("disabled")
+      : btnAgregar.classList.remove("disabled");
   };
 
   return (
-    <table className="table table-striped table-hover table-bordered">
-      <thead>
-        <tr className="text-center">
-          <th>Nombre</th>
-          <th>Phone Number</th>
-          <th>Date of Birth</th>
-          <th>Aciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>765-382-8195</td>
-          <td>704-993-5435</td>
-          <td>September 14, 1965</td>
-          <td className="table-action d-flex justify-content-around">
-            <button
-              type="button"
-              className="btn btn-sm btn-secondary"
-              onClick={handleEdit}
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="editar"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-edit-2 align-middle"
-              >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-              </svg>
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-warning"
-              onClick={handleDelete}
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="eliminar"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-trash align-middle"
-              >
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <>
+      <h1 className="h3 mb-3">gestión categoria / montos</h1>
+      <div className="row">
+        <div className="col-12">
+          <div className="card">
+            <form onSubmit={handleAgregar}>
+              <table className="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr className="text-center">
+                    <th>Categoria</th>
+                    <th>Descripción</th>
+                    <th>Aciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input
+                        className="form-control"
+                        type="text"
+                        name="Categoria"
+                        value={Categoria}
+                        autoComplete="off"
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        className="form-control"
+                        type="text"
+                        name="Descripcion"
+                        value={Descripcion}
+                        autoComplete="off"
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <span
+                        id="btnAgregar"
+                        className="btn btn-sm btn-secondary float-none"
+                        type="submit"
+                        onClick={handleAgregar}
+                      >
+                        Agregar
+                      </span>
+                    </td>
+                  </tr>
+
+                  {cats.map((categoria, index) => (
+                    <AmountItem
+                      key={index}
+                      categoria={categoria}
+                      action={handleModificar}
+                      stateButton={stateButton}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };

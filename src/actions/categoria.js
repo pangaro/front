@@ -6,7 +6,8 @@ export const categoriaStartLoading = () => {
     return async(dispatch) => {
         
         try {
-            
+
+
             const resp = await fetchConToken( 'category' );
             const body = await resp.json();
             // const events = dateEvents( body.event );

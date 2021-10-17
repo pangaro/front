@@ -20,4 +20,12 @@ export const types = {
     categoria_clear_active: '[CAT] clear_active',
     categoria_deleted: '[CAT] deleted',
     categoria_updated: '[CAT] updated',
+
+    montos_loaded:'[MONT] loaded',
+    montos_start_add_new: '[MONT] add_new',
+    montos_add_new: '[MONT] add_new',
+    montos_set_active: '[MONT] set_active',
+    montos_clear_active: '[MONT] clear_active',
+    montos_deleted: '[MONT] deleted',
+    montos_updated: '[MONT] updated',
 }
