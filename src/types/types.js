@@ -1,6 +1,5 @@
 export const types = {
 
-
     auth_checking_finish: '[auth] checking_finish_login_state',
     auth_start_login: '[auth] start_login',
     auth_login: '[auth] login',
@@ -28,4 +27,9 @@ export const types = {
     monto_clear_active: '[MONT] clear_active',
     monto_deleted: '[MONT] deleted',
     monto_updated: '[MONT] updated',
+
+    guardia_tipo_loaded:'[GT] loaded',
+    modalidad_horaria_loaded:'[MH] loaded',
+    dia_servicio_loaded:'[DS] loaded',
+    categoria_sel_loaded:'[CA] loaded',
 }

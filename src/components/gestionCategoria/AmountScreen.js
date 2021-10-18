@@ -1,33 +1,69 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
 import { useForm } from "../../hooks/useForm.js";
 import { AmountItem } from "./AmountItem.js";
 import { montoStartLoading } from "../../actions/monto.js";
+import { gTipoLoadedStartLoading, mHorariaLoadedStartLoading, dServicioLoadedStartLoading } from "../../actions/selectOptions";
 
 export const AmountScreen = () => {
+
+  const { gTipo, mHoraria, dServicio } = useSelector((state) => state.sel);
+
   const { monts } = useSelector((state) => state.mont);
+
+  const modalidadHorariaID = [
+    {
+      value: 8,
+      label: 8,
+    },
+    {
+      value: 12,
+      label: 12,
+    },
+    {
+      value: 16,
+      label: 16,
+    },
+  ];
 
   const dispatch = useDispatch();
 
-  const [formValues, handleInputChange, reset] = useForm({
+  const [formValues, handleInputChange, dropDownChange, reset] = useForm({
     CategoriaMontosID: "",
     Categoria: "",
     Anio: new Date().getFullYear(),
+    ModalidadHorariaID: "",
+    DiasServicioID: "",
+    GuardiaTipoID: "",
+    Monto: "",
   });
 
-  const { CategoriaMontosID, Categoria, Anio, ModalidadHorariaID, DiasServicioID, GuardiaTipoID, Monto } = formValues;
+  const {
+    CategoriaMontosID,
+    Categoria,
+    Anio,
+    ModalidadHorariaID,
+    DiasServicioID,
+    GuardiaTipoID,
+    Monto,
+  } = formValues;
 
+
+  dispatch(gTipoLoadedStartLoading());
   useEffect(() => {
-    dispatch(montoStartLoading({Anio}));
-  }, [dispatch]);
+    dispatch(mHorariaLoadedStartLoading());
+    dispatch(dServicioLoadedStartLoading());
+    dispatch(montoStartLoading({ Anio }));
+  }, []);
 
   const handleAgregar = (e) => {
     e.preventDefault();
     // if (Categoria ==='' || Descripcion === '') {
     //   return }
-      
-  //   dispatch(categoriaStartAddNew(formValues));
-  //   reset();
+
+    //   dispatch(categoriaStartAddNew(formValues));
+    //   reset();
   };
 
   // const handleModificar = (values) => {
@@ -42,7 +78,9 @@ export const AmountScreen = () => {
   //     ? btnAgregar.classList.add("disabled")
   //     : btnAgregar.classList.remove("disabled");
   // };
-
+  // const dropDownChange = (value) => {
+  //   console.log(value)
+  // }
   return (
     <>
       <h1 className="h3 mb-3">gestión categoria / montos</h1>
@@ -74,14 +112,15 @@ export const AmountScreen = () => {
                       />
                     </td>
                     <td>
-                      <input
-                        className="form-control"
-                        type="text"
+                      {/* <Select
+                        options={modalidadHorariaID}
                         name="ModalidadHorariaID"
-                        value={ModalidadHorariaID}
-                        autoComplete="off"
-                        onChange={handleInputChange}
-                      />
+                        // value={modalidadHorariaID}
+                        onChange={(e) => dropDownChange({
+                          'name':'ModalidadHorariaID',
+                          'value':e.value
+                        })}
+                      /> */}
                     </td>
                     <td>
                       <input
@@ -94,18 +133,13 @@ export const AmountScreen = () => {
                       />
                     </td>
                     <td>
-                      <select
-                        className="form-select"
-                        name="GuardiaTipoID"
-                        value={GuardiaTipoID}
-                        autoComplete="off"
-                        onChange={handleInputChange}
-                      >
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                      </select>
+                      <Select
+                        // options={modalidadHorariaID}
+                        // name="GuardiaTipoID"
+                        // value={GuardiaTipoID}
+                        // autoComplete="off"
+                        onChange={dropDownChange}
+                      />
                     </td>
                     <td>
                       <input
@@ -126,9 +160,8 @@ export const AmountScreen = () => {
                       >
                         Agregar
                       </span>
-                    </td> 
+                    </td>
                   </tr>
-
                   {monts.map((monto, index) => (
                     <AmountItem
                       key={index}

@@ -14,5 +14,13 @@ export const useForm = (initialState = {}) => {
     });
   };
 
-  return [values, handleInputChange, reset];
+  const dropDownChange = (e) => {
+    if (e !== undefined) {
+      setValues({
+        ...values,
+        [e.name]: e.value,
+      });
+    }
+  };
+  return [values, handleInputChange, dropDownChange, reset];
 };
