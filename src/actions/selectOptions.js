@@ -7,7 +7,16 @@ export const gTipoLoadedStartLoading = () => {
     try {
       const resp = await fetchConToken("guardtype");
       const body = await resp.json();
-      dispatch(gTipoLoaded(body.recordset));
+
+      const guardiaTipo = body.recordset.map((item) => {
+        return {
+          value: item.GuardiaTipoID,
+          label: item.Descripcion,
+        };
+      });
+
+      dispatch(gTipoLoaded(guardiaTipo));
+
     } catch (error) {
       console.log(error);
       Swal.fire("Error", "No de ha podido completar la operación", "error");
@@ -25,7 +34,14 @@ export const mHorariaLoadedStartLoading = () => {
     try {
       const resp = await fetchConToken("modalityHour");
       const body = await resp.json();
-      dispatch(mHorariaLoaded(body.recordset));
+
+      const modalidadHoraria = body.recordset.map((item) => {
+        return {
+          value: item.ModalidadHorariaID,
+          label: item.ModalidadHorariaID,
+        };
+      });
+      dispatch(mHorariaLoaded(modalidadHoraria));
     } catch (error) {
       console.log(error);
       Swal.fire("Error", "No de ha podido completar la operación", "error");
@@ -43,7 +59,15 @@ export const dServicioLoadedStartLoading = () => {
     try {
       const resp = await fetchConToken("dayservice");
       const body = await resp.json();
-      dispatch(dServicioLoaded(body.recordset));
+
+      const diasServicio = body.recordset.map((item) => {
+        return {
+          value: item.DiasServicioID,
+          label: item.Descripcion,
+        };
+      });
+
+      dispatch(dServicioLoaded(diasServicio));
     } catch (error) {
       console.log(error);
       Swal.fire("Error", "No de ha podido completar la operación", "error");
@@ -51,7 +75,33 @@ export const dServicioLoadedStartLoading = () => {
   };
 };
 
-const dServicioLoaded = (diaServicio) => ({
+const dServicioLoaded = (diasServicio) => ({
   type: types.dia_servicio_loaded,
-  payload: diaServicio,
+  payload: diasServicio,
+});
+
+export const cSelLoadedStartLoading = () => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken("categorysel");
+      const body = await resp.json();
+
+      const categoriaSelect = body.recordset.map((item) => {
+        return {
+          value: item.Categoria,
+          label: item.Categoria,
+        };
+      });
+
+      dispatch(categoriaLoaded(categoriaSelect));
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error", "No de ha podido completar la operación", "error");
+    }
+  };
+};
+
+const categoriaLoaded = (categoria) => ({
+  type: types.categoria_sel_loaded,
+  payload: categoria,
 });

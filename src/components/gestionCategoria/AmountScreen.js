@@ -1,38 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { useForm } from "../../hooks/useForm.js";
+import { anios } from "../../helpers/annexed";
+import { useForm } from "../../hooks/useForm";
 import { AmountItem } from "./AmountItem.js";
-import { montoStartLoading } from "../../actions/monto.js";
-import { gTipoLoadedStartLoading, mHorariaLoadedStartLoading, dServicioLoadedStartLoading } from "../../actions/selectOptions";
+import { montoClearActive, montoStartAddNew, montoStartLoading, montoStartUpdate } from "../../actions/monto.js";
+import {
+  gTipoLoadedStartLoading,
+  mHorariaLoadedStartLoading,
+  dServicioLoadedStartLoading,
+  cSelLoadedStartLoading,
+} from "../../actions/selectOptions";
 
 export const AmountScreen = () => {
-
-  const { gTipo, mHoraria, dServicio } = useSelector((state) => state.sel);
-
   const { monts } = useSelector((state) => state.mont);
 
-  const modalidadHorariaID = [
-    {
-      value: 8,
-      label: 8,
-    },
-    {
-      value: 12,
-      label: 12,
-    },
-    {
-      value: 16,
-      label: 16,
-    },
-  ];
+  const { catSel, gTipo, dServicio, mHoraria } = useSelector(
+    (state) => state.sel
+  );
 
   const dispatch = useDispatch();
 
   const [formValues, handleInputChange, dropDownChange, reset] = useForm({
     CategoriaMontosID: "",
-    Categoria: "",
     Anio: new Date().getFullYear(),
+    Categoria: "",
     ModalidadHorariaID: "",
     DiasServicioID: "",
     GuardiaTipoID: "",
@@ -41,20 +33,20 @@ export const AmountScreen = () => {
 
   const {
     CategoriaMontosID,
-    Categoria,
     Anio,
+    Categoria,
     ModalidadHorariaID,
     DiasServicioID,
     GuardiaTipoID,
     Monto,
   } = formValues;
 
-
-  dispatch(gTipoLoadedStartLoading());
   useEffect(() => {
+    dispatch(cSelLoadedStartLoading());
+    dispatch(gTipoLoadedStartLoading());
     dispatch(mHorariaLoadedStartLoading());
     dispatch(dServicioLoadedStartLoading());
-    dispatch(montoStartLoading({ Anio }));
+    dispatch(montoStartLoading(Anio));
   }, []);
 
   const handleAgregar = (e) => {
@@ -62,30 +54,47 @@ export const AmountScreen = () => {
     // if (Categoria ==='' || Descripcion === '') {
     //   return }
 
-    //   dispatch(categoriaStartAddNew(formValues));
-    //   reset();
+    dispatch(montoStartAddNew(formValues));
+      // reset();
   };
 
-  // const handleModificar = (values) => {
-  //   dispatch(categoriaStartUpdate(values));
+  const dropDownAnioChange = (e) => {
+    dispatch(montoStartLoading(e.value));
+  };
 
-  //   dispatch(categoriaClearActive());
-  // };
+  const handleModificar = (values) => {
+    dispatch(montoStartUpdate(values));
 
-  // const stateButton = (value) => {
-  //   const btnAgregar = document.querySelector("#btnAgregar");
-  //   value === true
-  //     ? btnAgregar.classList.add("disabled")
-  //     : btnAgregar.classList.remove("disabled");
-  // };
-  // const dropDownChange = (value) => {
-  //   console.log(value)
-  // }
+    dispatch(montoClearActive());
+  };
+
+  const stateButton = (value) => {
+    const btnAgregar = document.querySelector("#btnAgregar");
+    value === true
+      ? btnAgregar.classList.add("disabled")
+      : btnAgregar.classList.remove("disabled");
+  };
+
   return (
     <>
       <h1 className="h3 mb-3">gestión categoria / montos</h1>
       <div className="row">
         <div className="col-12">
+          <div className="mb-3 col-3 border px-3 py-2 bg-white">
+            <label className="form-label">Años</label>
+            <Select
+              options={anios}
+              value={anios.value}
+              defaultValue={anios[2]}
+              name="anio"
+              onChange={(e) =>
+                dropDownAnioChange({
+                  name: "anio",
+                  value: e.value,
+                })
+              }
+            />
+          </div>
           <div className="card">
             <form onSubmit={handleAgregar}>
               <table className="table table-striped table-hover table-bordered">
@@ -102,49 +111,58 @@ export const AmountScreen = () => {
                 <tbody>
                   <tr>
                     <td>
-                      <input
-                        className="form-control"
-                        type="text"
+                      <Select
+                        options={catSel}
                         name="Categoria"
-                        value={Categoria}
-                        autoComplete="off"
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      {/* <Select
-                        options={modalidadHorariaID}
-                        name="ModalidadHorariaID"
-                        // value={modalidadHorariaID}
-                        onChange={(e) => dropDownChange({
-                          'name':'ModalidadHorariaID',
-                          'value':e.value
-                        })}
-                      /> */}
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="text"
-                        name="DiasServicioID"
-                        value={DiasServicioID}
-                        autoComplete="off"
-                        onChange={handleInputChange}
+                        onChange={(e) =>
+                          dropDownChange({
+                            name: "Categoria",
+                            value: e.value,
+                          })
+                        }
                       />
                     </td>
                     <td>
                       <Select
-                        // options={modalidadHorariaID}
-                        // name="GuardiaTipoID"
-                        // value={GuardiaTipoID}
-                        // autoComplete="off"
-                        onChange={dropDownChange}
+                        options={mHoraria}
+                        name="ModalidadHorariaID"
+                        onChange={(e) =>
+                          dropDownChange({
+                            name: "ModalidadHorariaID",
+                            value: e.value,
+                          })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <Select
+                        options={dServicio}
+                        name="DiasServicioID"
+                        onChange={(e) =>
+                          dropDownChange({
+                            name: "DiasServicioID",
+                            value: e.value,
+                          })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <Select
+                        options={gTipo}
+                        name="GuardiaTipoID"
+                        onChange={(e) =>
+                          dropDownChange({
+                            name: "GuardiaTipoID",
+                            value: e.value,
+                          })
+                        }
                       />
                     </td>
                     <td>
                       <input
                         className="form-control"
                         type="text"
+                        pattern="^\d*(\.\d{0,2})?$"
                         name="Monto"
                         value={Monto}
                         autoComplete="off"
@@ -166,8 +184,9 @@ export const AmountScreen = () => {
                     <AmountItem
                       key={index}
                       monto={monto}
-                      // action={handleModificar}
-                      // stateButton={stateButton}
+                      anio={Anio}
+                      action={handleModificar}
+                      stateButton={stateButton}
                     />
                   ))}
                 </tbody>

@@ -2,13 +2,15 @@ import Swal from "sweetalert2";
 import { fetchConToken } from "../helpers/fetch";
 import { types } from "../types/types";
 
-export const montoStartLoading = ({ Anio }) => {
+export const montoStartLoading = (Anio) => {
   return async (dispatch) => {
     try {
       const resp = await fetchConToken("categoryAmount", { Anio }, "POST");
       const body = await resp.json();
 
-      dispatch(montoLoaded(body.recordset));
+      body.ok
+        ? dispatch(montoLoaded(body.recordset))
+        : dispatch(montoClear(body.recordset));
     } catch (error) {
       console.log(error);
       Swal.fire("Error", "No de ha podido completar la operación", "error");
@@ -16,22 +18,19 @@ export const montoStartLoading = ({ Anio }) => {
   };
 };
 
-export const categoriaStartAddNew = (categoria) => {
+export const montoStartAddNew = (monto) => {
   return async (dispatch, getState) => {
-    //TODO agregar el username en el alta
-    // const { username } = getState().auth;
+    const { username: Usuario } = getState().auth;
+
+    const montoOk = { ...monto, Usuario };
+    delete montoOk.CategoriaMontosID;
+
     try {
-      const resp = await fetchConToken("category/new", categoria, "POST");
+      const resp = await fetchConToken("categoryAmount/new", montoOk, "POST");
       const body = await resp.json();
 
       if (body.ok) {
-        //             // event.id = body.event.id;
-        //             // event.user = {
-        //             //     _id: uid,
-        //             //     name: name
-        //             // }
-        //             // console.log( event );
-        dispatch(categoriaAddNew(categoria));
+        dispatch(montoAddNew(montoOk));
         Swal.fire("Atención", body.msg, "success");
       }
     } catch (error) {
@@ -41,26 +40,30 @@ export const categoriaStartAddNew = (categoria) => {
   };
 };
 
-const categoriaAddNew = (categoria) => ({
-  type: types.categoria_add_new,
-  payload: categoria,
+const montoAddNew = (monto) => ({
+  type: types.monto_add_new,
+  payload: monto,
 });
 
-export const categoriaSetActive = (categoria) => ({
-  type: types.categoria_set_active,
-  payload: categoria,
+export const montoSetActive = (monto) => ({
+  type: types.monto_set_active,
+  payload: monto,
 });
 
-export const categoriaStartDelete = () => {
+export const montoStartDelete = () => {
   return async (dispatch, getState) => {
-    const { Categoria } = getState().cat.catActive;
+    const { CategoriaMontosID } = getState().mont.montActive;
 
     try {
-      const resp = await fetchConToken(`category/${Categoria}`, {}, "DELETE");
+      const resp = await fetchConToken(
+        `categoryAmount/${CategoriaMontosID}`,
+        {},
+        "DELETE"
+      );
       const body = await resp.json();
 
       if (body.ok) {
-        dispatch(categoriaDeleted());
+        dispatch(montoDeleted());
         Swal.fire("Atención", body.msg, "success");
       } else {
         Swal.fire("Error", body.msg, "error");
@@ -76,7 +79,7 @@ export const montoStartUpdate = (monto) => {
   return async (dispatch, getState) => {
     const { monto } = getState().mont.montActive;
     try {
-      const resp = await fetchConToken(`category/${monto}`, monto, "PUT");
+      const resp = await fetchConToken(`categoryAmount/${monto}`, monto, "PUT");
       const body = await resp.json();
 
       if (body.ok) {
@@ -99,9 +102,11 @@ const montoUpdated = (monto) => ({
   payload: monto,
 });
 
-const categoriaDeleted = () => ({ type: types.categoria_deleted });
+const montoDeleted = () => ({ type: types.monto_deleted });
 
 const montoLoaded = (montos) => ({
   type: types.monto_loaded,
   payload: montos,
 });
+
+const montoClear = () => ({ type: types.monto_clear });

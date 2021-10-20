@@ -4,6 +4,7 @@ const initialState = {
   gTipo: [],
   mHoraria: [],
   dServicio: [],
+  catSel: [],
 };
 
 export const selReducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ export const selReducer = (state = initialState, action) => {
     return {
         ...state,
         dServicio: [...action.payload],
+    };
+  case types.categoria_sel_loaded:
+    return {
+        ...state,
+        catSel: [...action.payload],
     };
     default:
       return state;

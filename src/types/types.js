@@ -21,6 +21,7 @@ export const types = {
     categoria_updated: '[CAT] updated',
 
     monto_loaded:'[MONT] loaded',
+    monto_clear: '[MONT] clear',
     monto_start_add_new: '[MONT] add_new',
     monto_add_new: '[MONT] add_new',
     monto_set_active: '[MONT] set_active',

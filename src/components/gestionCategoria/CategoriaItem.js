@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
+  categoriaClearActive,
   categoriaSetActive,
   categoriaStartDelete,
   categoriaStartLoading,
@@ -61,18 +62,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
       value="${descripcionData}"
     >
   `;
-
-    trs.forEach((tr) => {
-      const padre = tr.children[1];
-      if (tr.id !== c.Categoria) {
-        if (padre.children[0]) {
-          const hijo = padre.children[0].value;
-          padre.removeChild(padre.children[0]);
-          padre.innerHTML = hijo;
-        }
-      }
-    });
-
+  
     dispatch(categoriaSetActive(c));
   };
 
@@ -128,6 +118,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
         btnD.classList.remove("disabled");
       }
     });
+    dispatch(categoriaClearActive())
   };
 
   const handleConfirm = (c) => {

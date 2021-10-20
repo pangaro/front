@@ -11,10 +11,9 @@ import {
 
 export const CategoriaScreen = () => {
   const { cats } = useSelector((state) => state.cat);
-
   const dispatch = useDispatch();
 
-  const [formValues, handleInputChange, reset] = useForm({
+  const [formValues, handleInputChange, , reset] = useForm({
     Categoria: "",
     Descripcion: "",
   });
@@ -27,9 +26,10 @@ export const CategoriaScreen = () => {
 
   const handleAgregar = (e) => {
     e.preventDefault();
-    if (Categoria ==='' || Descripcion === '') {
-      return }
-      
+    if (Categoria === "" || Descripcion === "") {
+      return;
+    }
+
     dispatch(categoriaStartAddNew(formValues));
     reset();
   };

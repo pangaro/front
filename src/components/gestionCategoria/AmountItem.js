@@ -2,25 +2,26 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
-  categoriaSetActive,
-  categoriaStartDelete,
-  categoriaStartLoading,
-} from "../../actions/categoria";
+  montoClearActive,
+  montoSetActive,
+  montoStartDelete,
+  montoStartLoading,
+} from "../../actions/monto";
 
-export const AmountItem = ({ monto, action, stateButton }) => {
+export const AmountItem = ({ monto, action, stateButton, anio }) => {
   const dispatch = useDispatch();
 
   const { montActive } = useSelector((state) => state.mont);
 
-  const { 
-    Categoria,
+  const {
     CategoriaMontosID,
+    Categoria,
+    ModalidadHorariaID,
     DiasServicioID,
     DiasServicio,
     GuardiaTipoID,
     GuardiaTipo,
-    ModalidadHorariaID,
-    Monto
+    Monto,
   } = monto;
 
   const trs = document.querySelectorAll("tr[name='trTable']");
@@ -28,17 +29,19 @@ export const AmountItem = ({ monto, action, stateButton }) => {
   const btnsEdit = document.querySelectorAll("span[name='btnEdit']");
   const btnsDelete = document.querySelectorAll("span[name='btnDelete']");
 
+
   useEffect(() => {
-    dispatch(categoriaStartLoading());
+    console.log(anio)
+    dispatch(montoStartLoading(anio));
   }, [dispatch]);
 
   const handleEdit = (c) => {
-    const tdDescripcion = document.getElementById(`desc_${c.Categoria}`);
-    const descripcionData = tdDescripcion.innerHTML;
+    const tdMonto = document.getElementById(`mont_${c.CategoriaMontosID}`);
+    const montoData = tdMonto.innerHTML;
     stateButton(true);
 
     btnsEdit.forEach((btnE) => {
-      if (btnE.id !== `btnEdit_${c.Categoria}`) {
+      if (btnE.id !== `btnEdit_${c.CategoriaMontosID}`) {
         btnE.classList.remove("d-none");
         btnE.classList.add("disabled");
       } else {
@@ -47,7 +50,7 @@ export const AmountItem = ({ monto, action, stateButton }) => {
     });
 
     btnsDelete.forEach((btnD) => {
-      if (btnD.id !== `btnDelete_${c.Categoria}`) {
+      if (btnD.id !== `btnDelete_${c.CategoriaMontosID}`) {
         btnD.classList.remove("d-none");
         btnD.classList.add("disabled");
       } else {
@@ -55,141 +58,139 @@ export const AmountItem = ({ monto, action, stateButton }) => {
       }
     });
 
-    const btnConfirm = document.querySelector(`#btnConfirm_${c.Categoria}`);
+    const btnConfirm = document.querySelector(
+      `#btnConfirm_${c.CategoriaMontosID}`
+    );
     btnConfirm.classList.remove("d-none");
 
-    const btnCancel = document.querySelector(`#btnCancel_${c.Categoria}`);
+    const btnCancel = document.querySelector(
+      `#btnCancel_${c.CategoriaMontosID}`
+    );
     btnCancel.classList.remove("d-none");
 
-    tdDescripcion.innerHTML = `
+    tdMonto.innerHTML = `
     <input 
       type="text" 
-      name="descripcion_text"
+      name="monto_text"
       class="form-control" 
-      id="descripcion_text_${c.Categoria}" 
-      value="${descripcionData}"
+      id="monto_text_${c.CategoriaMontosID}" 
+      value="${montoData}"
     >
   `;
 
-    trs.forEach((tr) => {
-      const padre = tr.children[1];
-      if (tr.id !== c.Categoria) {
-        if (padre.children[0]) {
-          const hijo = padre.children[0].value;
-          padre.removeChild(padre.children[0]);
-          padre.innerHTML = hijo;
-        }
-      }
-    });
-
-    dispatch(categoriaSetActive(c));
+    dispatch(montoSetActive(c));
   };
 
   const handleDelete = (c) => {
-    // Swal.fire({
-    //   title: "Estás seguro?",
-    //   text: "No prodrás revertir esto",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Si, eliminar",
-    //   cancelButtonText: "Cancelar",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     dispatch(categoriaSetActive(c));
+    Swal.fire({
+      title: "Estás seguro?",
+      text: "No prodrás revertir esto",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(montoSetActive(c));
 
-    //     dispatch(categoriaStartDelete());
-    //   }
-    // });
+        dispatch(montoStartDelete());
+      }
+    });
   };
 
   const handleCancel = (c) => {
-    // stateButton(false);
-    // const tdAction = document.getElementById(`action_${c.Categoria}`);
+    stateButton(false);
 
-    // const div1 = tdAction.children[0];
-    // const div2 = tdAction.children[1];
+    const tdAction = document.getElementById(`action_${c.CategoriaMontosID}`);
 
-    // div1.children[0].classList.remove("d-none");
-    // div1.children[1].classList.remove("d-none");
+    const div1 = tdAction.children[0];
+    const div2 = tdAction.children[1];
 
-    // div2.children[0].classList.add("d-none");
-    // div2.children[1].classList.add("d-none");
+    div1.children[0].classList.remove("d-none");
+    div1.children[1].classList.remove("d-none");
 
-    // trs.forEach((tr) => {
-    //   const padre = tr.children[1];
-    //   if (tr.id === c.Categoria) {
-    //     if (padre.children[0]) {
-    //       padre.removeChild(padre.children[0]);
-    //       padre.innerHTML = catActive.Descripcion;
-    //     }
-    //   }
-    // });
-    // btnsEdit.forEach((btnE) => {
-    //   if (btnE.id !== `btnEdit_${c.Categoria}`) {
-    //     btnE.classList.remove("disabled");
-    //   }
-    // });
+    div2.children[0].classList.add("d-none");
+    div2.children[1].classList.add("d-none");
 
-    // btnsDelete.forEach((btnD) => {
-    //   if (btnD.id !== `btnDelete_${c.Categoria}`) {
-    //     btnD.classList.remove("disabled");
-    //   }
-    // });
+    trs.forEach((tr) => {
+      const padre = tr.children[4];
+
+      if (parseInt(tr.id) === parseInt(c.CategoriaMontosID)) {
+        if (padre.children[0]) {
+          padre.removeChild(padre.children[0]);
+          padre.innerHTML = montActive.Monto;
+        }
+      }
+    });
+    btnsEdit.forEach((btnE) => {
+      if (btnE.id !== `btnEdit_${c.CategoriaMontosID}`) {
+        btnE.classList.remove("disabled");
+      }
+    });
+
+    btnsDelete.forEach((btnD) => {
+      if (btnD.id !== `btnDelete_${c.Categoria}`) {
+        btnD.classList.remove("disabled");
+      }
+    });
+    dispatch(montoClearActive());
   };
 
   const handleConfirm = (c) => {
-    // stateButton(false);
-    // const valDescripcion = document.getElementById(
-    //   `descripcion_text_${Categoria}`
-    // ).value;
+    stateButton(false);
+    const valMonto = document.getElementById(
+      `monto_text_${CategoriaMontosID}`
+    ).value;
 
-    // const btnDelete = document.getElementById(`btnDelete_${Categoria}`);
-    // const btnConfirm = document.getElementById(`btnConfirm_${Categoria}`);
-    // const btnCancel = document.getElementById(`btnCancel_${Categoria}`);
+    const btnDelete = document.getElementById(`btnDelete_${CategoriaMontosID}`);
+    const btnConfirm = document.getElementById(
+      `btnConfirm_${CategoriaMontosID}`
+    );
+    const btnCancel = document.getElementById(`btnCancel_${CategoriaMontosID}`);
 
-    // document.getElementById(`desc_${Categoria}`).innerHTML = valDescripcion;
+    document.getElementById(`mont_${CategoriaMontosID}`).innerHTML = valMonto;
 
-    // btnConfirm.classList.add("d-none");
-    // btnCancel.classList.add("d-none");
+    btnConfirm.classList.add("d-none");
+    btnCancel.classList.add("d-none");
 
     // action({
     //   Categoria: Categoria,
     //   Descripcion: valDescripcion,
     // });
 
-    // btnsEdit.forEach((btnE) => {
-    //   if (btnE.id !== `btnEdit_${c.Categoria}`) {
-    //     btnE.classList.remove("disabled");
-    //   } else {
-    //     btnE.classList.remove("d-none");
-    //   }
-    // });
+    btnsEdit.forEach((btnE) => {
+      if (btnE.id !== `btnEdit_${c.CategoriaMontosID}`) {
+        btnE.classList.remove("disabled");
+      } else {
+        btnE.classList.remove("d-none");
+      }
+    });
 
-    // btnsDelete.forEach((btnD) => {
-    //   if (btnD.id !== `btnDelete_${c.Categoria}`) {
-    //     btnD.classList.remove("disabled");
-    //   } else {
-    //     btnDelete.classList.remove("d-none");
-    //   }
-    // });
+    btnsDelete.forEach((btnD) => {
+      if (btnD.id !== `btnDelete_${c.CategoriaMontosID}`) {
+        btnD.classList.remove("disabled");
+      } else {
+        btnDelete.classList.remove("d-none");
+      }
+    });
   };
 
   return (
-    <tr id={`monto_${CategoriaMontosID}`} name="trTable">
-      <td>{Categoria}</td>
-      <td>{ModalidadHorariaID}</td>
-      <td>{DiasServicio}</td>
-      <td>{GuardiaTipo}</td>
-      <td>{Monto}</td>
+    <tr id={CategoriaMontosID} name="trTable">
+      <td id={`cat_${CategoriaMontosID}`}>{Categoria}</td>
+      <td id={`mHoraria_${CategoriaMontosID}`}>{ModalidadHorariaID}</td>
+      <td id={`dServicio_${CategoriaMontosID}`}>{DiasServicio}</td>
+      <td id={`gTipo_${CategoriaMontosID}`}>{GuardiaTipo}</td>
+      <td id={`mont_${CategoriaMontosID}`}>{Monto}</td>
       <td id={`action_${CategoriaMontosID}`} className="table-action">
         <div className="btn-group btn-group-sm mb-1" style={{ float: "none" }}>
           <span
             id={`btnEdit_${CategoriaMontosID}`}
             name="btnEdit"
             className="btn btn-sm btn-secondary me-1"
-            // onClick={() => handleEdit(categoria)}
+            onClick={() => handleEdit(monto)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="editar"
@@ -210,10 +211,10 @@ export const AmountItem = ({ monto, action, stateButton }) => {
             </svg>
           </span>
           <span
-            id={`btnDelete_${Categoria}`}
+            id={`btnDelete_${CategoriaMontosID}`}
             name="btnDelete"
             className="btn btn-sm btn-danger me-1"
-            // onClick={() => handleDelete(categoria)}
+            onClick={() => handleDelete(monto)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="eliminar"
@@ -237,10 +238,10 @@ export const AmountItem = ({ monto, action, stateButton }) => {
         </div>
         <div className="btn-group btn-group-sm mb-1" style={{ float: "none" }}>
           <span
-            id={`btnConfirm_${Categoria}`}
+            id={`btnConfirm_${CategoriaMontosID}`}
             name="btnConfirm"
             className="btn btn-sm btn-success me-1 d-none"
-            // onClick={() => handleConfirm(categoria)}
+            onClick={() => handleConfirm(monto)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="confirmar"
@@ -263,10 +264,10 @@ export const AmountItem = ({ monto, action, stateButton }) => {
             </svg>
           </span>
           <span
-            id={`btnCancel_${Categoria}`}
+            id={`btnCancel_${CategoriaMontosID}`}
             name="btnCancel"
             className="btn btn-sm btn-danger d-none"
-            // onClick={() => handleCancel(categoria)}
+            onClick={() => handleCancel(monto)}
             data-toggle="tooltip"
             data-placement="bottom"
             title="cancelar"
