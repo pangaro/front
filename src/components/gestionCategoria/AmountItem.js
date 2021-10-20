@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
 import Swal from "sweetalert2";
 import {
   montoClearActive,
@@ -11,7 +12,11 @@ import {
 export const AmountItem = ({ monto, action, stateButton, anio }) => {
   const dispatch = useDispatch();
 
-  const { montActive } = useSelector((state) => state.mont);
+  const { catSel, mHoraria, gTipo, dServicio } = useSelector(
+    (state) => state.sel
+  );
+
+  // const { montActive } = useSelector((state) => state.mont);
 
   const {
     CategoriaMontosID,
@@ -24,20 +29,25 @@ export const AmountItem = ({ monto, action, stateButton, anio }) => {
     Monto,
   } = monto;
 
-  const trs = document.querySelectorAll("tr[name='trTable']");
+  const dropDownChange = (e) => {
+    console.log(e);
+  };
 
   const btnsEdit = document.querySelectorAll("span[name='btnEdit']");
   const btnsDelete = document.querySelectorAll("span[name='btnDelete']");
 
-
   useEffect(() => {
-    console.log(anio)
     dispatch(montoStartLoading(anio));
   }, [dispatch]);
 
   const handleEdit = (c) => {
-    const tdMonto = document.getElementById(`mont_${c.CategoriaMontosID}`);
-    const montoData = tdMonto.innerHTML;
+    const tr = document.getElementById(`${c.CategoriaMontosID}`);
+console.log(c.CategoriaMontosID)
+    for (let i = 0; i < tr.children.length - 1; i++) {
+      tr.children[i].children[0].classList.add("d-none");
+      tr.children[i].children[1].classList.remove("d-none");
+    }
+
     stateButton(true);
 
     btnsEdit.forEach((btnE) => {
@@ -67,16 +77,6 @@ export const AmountItem = ({ monto, action, stateButton, anio }) => {
       `#btnCancel_${c.CategoriaMontosID}`
     );
     btnCancel.classList.remove("d-none");
-
-    tdMonto.innerHTML = `
-    <input 
-      type="text" 
-      name="monto_text"
-      class="form-control" 
-      id="monto_text_${c.CategoriaMontosID}" 
-      value="${montoData}"
-    >
-  `;
 
     dispatch(montoSetActive(c));
   };
@@ -114,16 +114,13 @@ export const AmountItem = ({ monto, action, stateButton, anio }) => {
     div2.children[0].classList.add("d-none");
     div2.children[1].classList.add("d-none");
 
-    trs.forEach((tr) => {
-      const padre = tr.children[4];
+    const tr = document.getElementById(`${c.CategoriaMontosID}`);
 
-      if (parseInt(tr.id) === parseInt(c.CategoriaMontosID)) {
-        if (padre.children[0]) {
-          padre.removeChild(padre.children[0]);
-          padre.innerHTML = montActive.Monto;
-        }
-      }
-    });
+    for (let i = 0; i < tr.children.length - 1; i++) {
+      tr.children[i].children[0].classList.remove("d-none");
+      tr.children[i].children[1].classList.add("d-none");
+    }
+
     btnsEdit.forEach((btnE) => {
       if (btnE.id !== `btnEdit_${c.CategoriaMontosID}`) {
         btnE.classList.remove("disabled");
@@ -140,25 +137,31 @@ export const AmountItem = ({ monto, action, stateButton, anio }) => {
 
   const handleConfirm = (c) => {
     stateButton(false);
-    const valMonto = document.getElementById(
-      `monto_text_${CategoriaMontosID}`
-    ).value;
 
+    const tr = document.getElementById(`${c.CategoriaMontosID}`);
+
+    for (let i = 0; i < tr.children.length - 1; i++) {
+      tr.children[i].children[0].classList.remove("d-none");
+      tr.children[i].children[1].classList.add("d-none");
+
+    }
     const btnDelete = document.getElementById(`btnDelete_${CategoriaMontosID}`);
     const btnConfirm = document.getElementById(
       `btnConfirm_${CategoriaMontosID}`
     );
     const btnCancel = document.getElementById(`btnCancel_${CategoriaMontosID}`);
 
-    document.getElementById(`mont_${CategoriaMontosID}`).innerHTML = valMonto;
-
     btnConfirm.classList.add("d-none");
     btnCancel.classList.add("d-none");
 
-    // action({
-    //   Categoria: Categoria,
-    //   Descripcion: valDescripcion,
-    // });
+    action({
+      Categoria: tr.children[0].children[1].children[3].value,
+      Anio: anio,
+      ModalidadHorariaID: tr.children[1].children[1].children[3].value,
+      DiasServicioID: tr.children[2].children[1].children[3].value,
+      GuardiaTipoID: tr.children[3].children[1].children[3].value,
+      Monto: tr.children[4].children[1].value,
+    });
 
     btnsEdit.forEach((btnE) => {
       if (btnE.id !== `btnEdit_${c.CategoriaMontosID}`) {
@@ -179,11 +182,76 @@ export const AmountItem = ({ monto, action, stateButton, anio }) => {
 
   return (
     <tr id={CategoriaMontosID} name="trTable">
-      <td id={`cat_${CategoriaMontosID}`}>{Categoria}</td>
-      <td id={`mHoraria_${CategoriaMontosID}`}>{ModalidadHorariaID}</td>
-      <td id={`dServicio_${CategoriaMontosID}`}>{DiasServicio}</td>
-      <td id={`gTipo_${CategoriaMontosID}`}>{GuardiaTipo}</td>
-      <td id={`mont_${CategoriaMontosID}`}>{Monto}</td>
+      <td id={`cat_${CategoriaMontosID}`}>
+        <span>{Categoria}</span>
+        <Select
+          options={catSel}
+          name="Categoria"
+          className="d-none"
+          value={{ value: Categoria, label: Categoria }}
+          onChange={(e) =>
+            dropDownChange({
+              name: "Categoria",
+              value: e.value,
+            })
+          }
+        />
+      </td>
+      <td id={`mHoraria_${CategoriaMontosID}`}>
+        <span>{ModalidadHorariaID}</span>
+        <Select
+          options={mHoraria}
+          name="ModalidadHorariaID"
+          className="d-none"
+          value={{ value: ModalidadHorariaID, label: ModalidadHorariaID }}
+          onChange={(e) =>
+            dropDownChange({
+              name: "ModalidadHorariaID",
+              value: e.value,
+            })
+          }
+        />
+      </td>
+      <td id={`dServicio_${CategoriaMontosID}`}>
+        <span>{DiasServicio}</span>
+        <Select
+          options={dServicio}
+          name="DiasServicioID"
+          className="d-none"
+          value={{ value: DiasServicioID, label: DiasServicio }}
+          onChange={(e) =>
+            dropDownChange({
+              name: "DiasServicioID",
+              value: e.value,
+            })
+          }
+        />
+      </td>
+      <td id={`gTipo_${CategoriaMontosID}`}>
+        <span>{GuardiaTipo}</span>
+        <Select
+          options={gTipo}
+          name="GuardiaTipoID"
+          className="d-none"
+          value={{ value: GuardiaTipoID, label: GuardiaTipo }}
+          onChange={(e) =>
+            dropDownChange({
+              name: "GuardiaTipoID",
+              value: e.value,
+            })
+          }
+        />
+      </td>
+      <td id={`mont_${CategoriaMontosID}`}>
+        <span>{Monto}</span>
+        <input
+          type="text"
+          name="monto_text"
+          className="form-control d-none"
+          id={`monto_text_${CategoriaMontosID}`}
+          defaultValue={`${Monto}`}
+        />
+      </td>
       <td id={`action_${CategoriaMontosID}`} className="table-action">
         <div className="btn-group btn-group-sm mb-1" style={{ float: "none" }}>
           <span

@@ -47,7 +47,7 @@ export const AmountScreen = () => {
     dispatch(mHorariaLoadedStartLoading());
     dispatch(dServicioLoadedStartLoading());
     dispatch(montoStartLoading(Anio));
-  }, []);
+  }, [dispatch]);
 
   const handleAgregar = (e) => {
     e.preventDefault();
