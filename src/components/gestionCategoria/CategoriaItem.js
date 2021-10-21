@@ -7,6 +7,7 @@ import {
   categoriaStartDelete,
   categoriaStartLoading,
 } from "../../actions/categoria";
+import { buttonCancelClick } from "../../helpers/buttonActions";
 
 export const CategoriaItem = ({ categoria, action, stateButton }) => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
       value="${descripcionData}"
     >
   `;
-  
+
     dispatch(categoriaSetActive(c));
   };
 
@@ -89,14 +90,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
     stateButton(false);
     const tdAction = document.getElementById(`action_${c.Categoria}`);
 
-    const div1 = tdAction.children[0];
-    const div2 = tdAction.children[1];
-
-    div1.children[0].classList.remove("d-none");
-    div1.children[1].classList.remove("d-none");
-
-    div2.children[0].classList.add("d-none");
-    div2.children[1].classList.add("d-none");
+    buttonCancelClick(tdAction);
 
     trs.forEach((tr) => {
       const padre = tr.children[1];
@@ -118,7 +112,7 @@ export const CategoriaItem = ({ categoria, action, stateButton }) => {
         btnD.classList.remove("disabled");
       }
     });
-    dispatch(categoriaClearActive())
+    dispatch(categoriaClearActive());
   };
 
   const handleConfirm = (c) => {

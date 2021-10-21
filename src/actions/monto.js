@@ -24,7 +24,6 @@ export const montoStartAddNew = (monto) => {
 
     const montoOk = { ...monto, Usuario };
     delete montoOk.CategoriaMontosID;
-
     try {
       const resp = await fetchConToken("categoryAmount/new", montoOk, "POST");
       const body = await resp.json();
@@ -83,13 +82,16 @@ export const montoStartUpdate = (monto) => {
 
     const { CategoriaMontosID } = getState().mont.montActive;
 
-// console.log(montoOk)
+    // console.log(montoOk)
     try {
-      const resp = await fetchConToken(`categoryAmount/${CategoriaMontosID}`, montoOk, "PUT");
+      const resp = await fetchConToken(
+        `categoryAmount/${CategoriaMontosID}`,
+        montoOk,
+        "PUT"
+      );
       const body = await resp.json();
-// console.log(body)
+      // console.log(body)
       if (body.ok) {
-        console.log(monto)
         dispatch(montoUpdated(monto));
         Swal.fire("Atención", body.msg, "success");
       } else {

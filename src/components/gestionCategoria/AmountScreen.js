@@ -55,7 +55,7 @@ export const AmountScreen = () => {
     //   return }
 
     dispatch(montoStartAddNew(formValues));
-      // reset();
+      reset();
   };
 
   const dropDownAnioChange = (e) => {
